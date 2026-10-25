@@ -1,0 +1,28 @@
+{
+  "name": "salon-platform-packages",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Shared, versioned packages for the Salon platform micro-frontends",
+  "type": "module",
+  "packageManager": "pnpm@12.15.0",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "pnpm build && changeset publish"
+  },
+  "devDependencies": {
+    "@changesets/cli": "3.0.3",
+    "@beauticlick/config": "workspace:*",
+    "eslint": "10.13.0",
+    "prettier": "3.9.10",
+    "typescript": "6.0.3"
+  }
+}

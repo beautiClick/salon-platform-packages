@@ -1,0 +1,46 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+# Never run two releases at once; let the running one finish.
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+# Release needs more power than CI: push a "Version Packages" branch,
+# open a PR, and publish to GitHub Packages.
+permissions:
+  contents: write
+  pull-requests: write
+  packages: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+          # setup-node writes an .npmrc that reads the token from NODE_AUTH_TOKEN.
+          registry-url: https://npm.pkg.github.com
+          scope: '@beauticlick'
+
+      - run: pnpm install --frozen-lockfile
+
+      # Two modes, decided by whether unreleased changesets exist:
+      #  1. Changesets found  -> open/update a "Version Packages" PR.
+      #  2. That PR was merged -> run the publish script (build + publish).
+      - uses: changesets/action@v2.1.2
+        with:
+          version-script: pnpm version-packages
+          publish-script: pnpm release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
