@@ -1,6 +1,6 @@
 {
   "name": "@beauticlick/tokens",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Design tokens and the salon-type contract shared by all Salon apps",
   "type": "module",
   "repository": {
